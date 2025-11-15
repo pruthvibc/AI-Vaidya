@@ -1,113 +1,107 @@
-🌿 AI Vaidya- Ayurveda AI Knowledge Assistant
+# 🌿 Ayurveda AI Knowledge Assistant
 
 Transforming unstructured Ayurveda knowledge into instant, reliable answers.
 
-📝 Project Title and Problem Statement
+---
 
-Project Title: Ayurveda AI Knowledge Assistant
+## 📝 Project Title and Problem Statement
 
-Problem Statement:
+**Project Title:** Ayurveda AI Knowledge Assistant  
+
+**Problem Statement:**  
 Ayurveda holds vast knowledge across books, research papers, and articles. However, this knowledge is often scattered, unstructured, and hard to access. Students, practitioners, and enthusiasts struggle to quickly find reliable information.
 
-Our solution: A smart AI system that reads Ayurveda texts, understands their content, and answers user queries in plain English, without needing the internet.
+**Our Solution:**  
+A smart AI system that reads Ayurveda texts, understands their content, and answers user queries in plain English, without needing the internet.
 
-💡 Solution Overview
+---
 
-What it does:
+## 💡 Solution Overview
 
-Ingests Ayurveda books, research papers, and articles.
+**What it does:**
 
-Understands the content using AI models.
+- Ingests Ayurveda books, research papers, and articles.
+- Understands the content using AI models.
+- Provides natural language answers to user queries.
 
-Provides natural language answers to user queries.
+**Key Features:**
 
-Key Features:
+- **Text Ingestion:** Upload and process PDFs, articles, and e-books.  
+- **Semantic Search:** Finds the most relevant text based on user questions.  
+- **AI-Powered Q&A:** Generates concise and accurate answers in English.  
+- **Offline Knowledge Base:** Uses only provided texts, no internet required.
 
-Text Ingestion: Upload and process PDFs, articles, and e-books.
+**Benefit:** Users can get instant, accurate answers without reading multiple sources manually.
 
-Semantic Search: Finds the most relevant text based on user questions.
+---
 
-AI-Powered Q&A: Generates concise and accurate answers in English.
+## ⚙️ Technical Architecture
 
-Offline Knowledge Base: Uses only provided texts, no internet required.
+1. **Data Processing:**  
+   - Text cleaning, chunking, and formatting.  
+   - Convert text into embeddings (semantic vectors).
 
-Benefit: Users can get instant, accurate answers without reading multiple sources manually.
+2. **Model Usage:**  
+   - Language model processes user queries.  
+   - Vector search retrieves relevant text chunks.  
+   - AI generates answers based on retrieved content.
 
-⚙️ Technical Architecture
+3. **User Flow:**  
+   1. User asks a question in English.  
+   2. Query is converted to embedding.  
+   3. System searches vector database for relevant content.  
+   4. AI generates and displays the answer.
 
-1. Data Processing:
-
-Text cleaning, chunking, and formatting.
-
-Convert text into embeddings (semantic vectors).
-
-2. Model Usage:
-
-Language model processes user queries.
-
-Vector search retrieves relevant text chunks.
-
-AI generates answers based on retrieved content.
-
-3. User Flow:
-
-User asks a question in English.
-
-Query is converted to embedding.
-
-System searches vector database for relevant content.
-
-AI generates and displays the answer.
-
-Architecture Diagram:
+**Architecture Diagram:**
 
 [Ayurveda Texts] --> [Text Preprocessing & Embeddings] --> [Vector Database]
-         ↑                                                   |
-         |                                                   ↓
-       [User Query] --> [Query Embedding & Retrieval] --> [AI Model] --> [Answer]
+↑ |
+| ↓
+[User Query] --> [Query Embedding & Retrieval] --> [AI Model] --> [Answer]
 
-🛠️ APIs / Libraries Used
+## 🛠️ APIs / Libraries Used
 
-Python Libraries:
+**Python Libraries:**
 
-transformers (Hugging Face)
+- transformers (Hugging Face)  
+- sentence-transformers  
+- FAISS / Chroma (Vector Search)  
+- Streamlit (Frontend Interface)  
+- PyPDF2 / pdfplumber (PDF reading)  
+- numpy, pandas (Data processing)
 
-sentence-transformers
+**Open-Source Models:**
 
-FAISS / Chroma (Vector Search)
+- Pretrained Transformer models (e.g., GPT or BERT variants)
 
-Streamlit (Frontend Interface)
+---
 
-PyPDF2 / pdfplumber (PDF reading)
+## 🚀 Future Scope
 
-numpy, pandas (Data processing)
+- Support for multi-language queries (Sanskrit, Hindi)  
+- Voice-based Q&A for accessibility  
+- Image recognition for Ayurvedic herbs and plants  
+- Mobile application for wider reach  
+- Continuous knowledge base updates with new research
 
-Open-Source Models:
+---
 
-Pretrained Transformer models (e.g., GPT or BERT variants)
+## 🎯 How to Run
 
-🚀 Future Scope
+1. Install dependencies:
 
-Support for multi-language queries (Sanskrit, Hindi).
-
-Voice-based Q&A for accessibility.
-
-Image recognition for Ayurvedic herbs and plants.
-
-Mobile application for wider reach.
-
-Continuous knowledge base updates with new research.
-
-🎯 How to Run
-
-Install dependencies:
-
+```bash
 pip install -r requirements.txt
 
-
-Run the app:
-
+2. Run the app:
 streamlit run app.py
 
 
-Upload Ayurveda texts and start asking questions.
+3. Upload Ayurveda texts and start asking questions.
+
+
+---
+
+This is fully Markdown-compliant and will render correctly on GitHub.  
+
+If you want, I can also **add GitHub badges, a “Getting Started” section, and a demo link** to make it look more professional. Do you want 
