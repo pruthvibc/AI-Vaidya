@@ -100,8 +100,4 @@ streamlit run app.py
 3. Upload Ayurveda texts and start asking questions.
 
 
----
-
-This is fully Markdown-compliant and will render correctly on GitHub.  
-
-If you want, I can also **add GitHub badges, a “Getting Started” section, and a demo link** to make it look more professional. Do you want 
+ 
