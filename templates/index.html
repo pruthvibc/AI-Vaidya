@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Vaidya – Ayurveda Assistant</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg,#f3e8ff,#fbc2eb); min-height: 100vh; padding: 20px; }
+
+    .main-container { display: flex; max-width: 1400px; margin: 0 auto; height: calc(100vh - 40px); background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden; }
+
+    /* Sidebar */
+    #sidebar { width: 280px; background: linear-gradient(180deg,#8b5cf6,#ec4899); padding: 24px 0; overflow-y: auto; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 10px; }
+    .sidebar-header { padding: 0 20px 20px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.3); }
+    .sidebar-header h4 { color: #fff; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .history-item { padding: 12px 20px; margin: 0 12px 4px; border-radius: 8px; cursor: pointer; border-left: 2px solid transparent; color: #fff; font-weight: 500; transition: all 0.2s ease; }
+    .history-item:hover { background: rgba(255,255,255,0.2); }
+    .history-item.active { background: rgba(255,255,255,0.3); border-left-color: #fff; }
+
+    /* Main Content */
+    #main { flex: 1; padding: 40px; overflow-y: auto; background: linear-gradient(135deg,#f9f5ff,#fce7f3); }
+    #main::-webkit-scrollbar { width: 6px; }
+    #main::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+
+    .header-section { text-align: center; margin-bottom: 48px; }
+    .header-icon-wrapper { width: 80px; height: 80px; background: linear-gradient(135deg,#8b5cf6,#ec4899); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 3rem; color: #fff; }
+
+    /* Cards */
+    .action-card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; border: 1px solid #e5e7eb; }
+    .card-title { color: #111827; font-weight: 600; font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .card-title i { color: #8b5cf6; font-size: 1.25rem; }
+
+    .custom-file-input { display: flex; align-items: center; gap: 12px; }
+    .custom-file-input input[type="file"] { flex: 1; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; background: #fff; cursor: pointer; }
+
+    .btn-custom { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.875rem; border: none; }
+
+    .btn-upload { background: linear-gradient(135deg,#8b5cf6,#ec4899); color: #fff; }
+    .btn-upload:hover { background: linear-gradient(135deg,#6d28d9,#db2777); }
+
+    .btn-ask { background: linear-gradient(135deg,#9333ea,#db2777); color: #fff; }
+    .btn-ask:hover { background: linear-gradient(135deg,#7e22ce,#be185d); }
+
+    .question-input { flex: 1; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 0.9375rem; }
+    .question-input:focus { outline: none; border-color: #9333ea; box-shadow: 0 0 0 3px rgba(147,51,234,0.15); }
+
+    /* Loading */
+    #loading { display: none; text-align: center; padding: 60px 20px; }
+    .spinner-custom { width: 48px; height: 48px; border: 3px solid #e5e7eb; border-top: 3px solid #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Answer Section */
+    #answerSection { display: none; }
+    .answer-box, .reference-box { padding: 24px; border-radius: 12px; margin-top: 16px; position: relative; border: 1px solid #e5e7eb; background: #fff; }
+    .answer-box { border-left: 4px solid #8b5cf6; background: #f5f3ff; }
+    .reference-box { border-left: 4px solid #ec4899; background: #fce7f3; max-height: 280px; overflow-y: auto; }
+    .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
+    .box-header h6 { font-weight: 600; color: #111827; margin: 0; display: flex; align-items: center; gap: 8px; font-size: 0.9375rem; }
+    .box-header h6 i { font-size: 1.1rem; }
+    .answer-text, .reference-text { line-height: 1.7; color: #374151; white-space: pre-wrap; word-wrap: break-word; font-size: 0.9375rem; }
+
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h4><i class="fas fa-clock-rotate-left"></i> Recent Questions</h4>
+        </div>
+        <div id="qaHistory">
+            <div class="empty-state" style="color:#fff;text-align:center;padding:20px;">
+                <i class="fas fa-comments" style="font-size:2rem;"></i>
+                <p>No questions yet</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="main">
+        <div class="header-section">
+            <div class="header-icon-wrapper">🌿</div>
+            <h1>AI Vaidya</h1>
+            <p>Your intelligent Ayurveda knowledge assistant</p>
+        </div>
+
+        <div class="action-card">
+            <div class="card-title"><i class="fas fa-cloud-upload-alt"></i> Upload Ayurveda Document</div>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="custom-file-input">
+                    <input type="file" name="file" accept=".pdf" required>
+                    <button class="btn-custom btn-upload" type="submit"><i class="fas fa-upload"></i> Upload</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="action-card">
+            <div class="card-title"><i class="fas fa-comment-dots"></i> Ask a Question</div>
+            <form id="askForm">
+                <div style="display:flex;gap:12px;">
+                    <input type="text" class="question-input" name="question" placeholder="What would you like to know about Ayurveda?" required>
+                    <button class="btn-custom btn-ask" type="submit"><i class="fas fa-paper-plane"></i> Ask</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="loading">
+            <div class="spinner-custom"></div>
+            <p>Processing your request...</p>
+        </div>
+
+        <div id="answerSection">
+            <div class="answer-box">
+                <div class="box-header">
+                    <h6><i class="fas fa-robot"></i> AI Answer</h6>
+                    <button class="copy-btn" id="copyAnswer"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="answer-text" id="answerText"></div>
+            </div>
+            <div class="reference-box">
+                <div class="box-header">
+                    <h6><i class="fas fa-book"></i> Source Reference</h6>
+                    <button class="copy-btn" id="copyReference"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="reference-text" id="referenceText"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const loadingDiv = document.getElementById("loading");
+const qaHistoryDiv = document.getElementById("qaHistory");
+const askForm = document.getElementById("askForm");
+const uploadForm = document.getElementById("uploadForm");
+const answerSection = document.getElementById("answerSection");
+const answerText = document.getElementById("answerText");
+const referenceText = document.getElementById("referenceText");
+const copyAnswerBtn = document.getElementById("copyAnswer");
+const copyReferenceBtn = document.getElementById("copyReference");
+
+let qaHistory = [];
+let activeIndex = -1;
+
+function showLoading(){ loadingDiv.style.display="block"; answerSection.style.display="none"; }
+function hideLoading(){ loadingDiv.style.display="none"; answerSection.style.display="block"; }
+function copyText(text){ navigator.clipboard.writeText(text).then(()=>{
+    const btn=event.target.closest('.copy-btn'); const html=btn.innerHTML;
+    btn.innerHTML='<i class="fas fa-check"></i> Copied!'; btn.style.color='#8b5cf6'; btn.style.borderColor='#8b5cf6';
+    setTimeout(()=>{btn.innerHTML=html;btn.style.color='';btn.style.borderColor='';},2000);
+}).catch(err=>console.error(err)); }
+
+uploadForm.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    showLoading();
+    const formData = new FormData(uploadForm);
+    try{
+        const res = await fetch("/upload",{method:"POST",body:formData});
+        const data = await res.json();
+        hideLoading();
+        alert(data.message);
+        qaHistory = [];
+        activeIndex = -1;
+        renderSidebar();
+        uploadForm.reset();
+    } catch(e){ hideLoading(); alert("Upload failed"); }
+});
+
+askForm.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    showLoading();
+    const formData = new FormData(askForm);
+    try{
+        const res = await fetch("/ask",{method:"POST",body:formData});
+        const data = await res.json();
+        hideLoading();
+        const question = formData.get("question");
+        const id = qaHistory.length;
+        qaHistory.push({question, answer:data.answer, reference:data.reference});
+        renderSidebar();
+        showQA(id);
+        askForm.reset();
+    } catch(e){ hideLoading(); alert("Failed to get answer"); }
+});
+
+function renderSidebar(){
+    if(qaHistory.length===0){ qaHistoryDiv.innerHTML=`<div class="empty-state" style="color:#fff;text-align:center;padding:20px;"><i class="fas fa-comments" style="font-size:2rem;"></i><p>No questions yet</p></div>`; return; }
+    qaHistoryDiv.innerHTML="";
+    qaHistory.forEach((qa,idx)=>{
+        const item = document.createElement("div");
+        item.className="history-item";
+        if(idx===activeIndex) item.classList.add("active");
+        item.textContent=qa.question.length>35?qa.question.slice(0,35)+"...":qa.question;
+        item.onclick=()=>showQA(idx);
+        qaHistoryDiv.appendChild(item);
+    });
+}
+
+function showQA(id){
+    activeIndex=id;
+    const qa=qaHistory[id];
+    answerText.textContent=qa.answer;
+    referenceText.textContent=qa.reference;
+    answerSection.style.display="block";
+    renderSidebar();
+}
+
+copyAnswerBtn.addEventListener("click",()=>copyText(answerText.textContent));
+copyReferenceBtn.addEventListener("click",()=>copyText(referenceText.textContent));
+
+</script>
+
+</body>
+</html>
